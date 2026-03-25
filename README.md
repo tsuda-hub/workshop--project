@@ -1,2 +1,2 @@
-# workshop--project
+# workshop-project
 ワークショップメーカー
