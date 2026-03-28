@@ -1,4 +1,4 @@
-import { WORKSHOP_DATA, type Exercise, type Purpose, type Level } from "@/lib/data";
+import { WORKSHOP_DATA, type Exercise, type Purpose, type Level } from "@/data/data";
 
 export type Curriculum = {
   icebreakers: Exercise[];

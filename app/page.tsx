@@ -13,7 +13,7 @@ import {
   PHASE_COLORS,
   type Purpose,
   type Level,
-} from "@/lib/data";
+} from "@/data/data";
 
 type TimelineItem = {
   name: string;

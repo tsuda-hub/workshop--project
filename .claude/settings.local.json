@@ -15,7 +15,28 @@
       "Bash(npx next:*)",
       "Bash(npx tsc:*)",
       "Bash(npx:*)",
-      "Bash(powershell.exe -Command \"cd 'C:\\\\Users\\\\mamin\\\\OneDrive\\\\デスクトップ\\\\まさし'; git status\")"
+      "Bash(powershell.exe -Command \"cd 'C:\\\\Users\\\\mamin\\\\OneDrive\\\\デスクトップ\\\\まさし'; git status\")",
+      "Bash(cd:*)",
+      "Bash(mv masashi_strategy.md docs/)",
+      "Bash(mv note_project.md docs/)",
+      "Bash(mv \"演劇思考×AI×ビジネス/workshop_market.md\" docs/)",
+      "Bash(mv \"演劇思考×AI×ビジネス/workshop_market_strategy.md\" docs/)",
+      "Bash(mv \"演劇思考×AI×ビジネス/workshop_tech_stack.md\" docs/)",
+      "Bash(mv unnamed1.jpg assets/)",
+      "Bash(mv unnamed2.jpg assets/)",
+      "Bash(rm -rf workshop-app)",
+      "Bash(rm -rf workshop-source)",
+      "Bash(rm index.html)",
+      "Bash(rm -rf \"演劇×AI\")",
+      "Bash(rm -rf \"演劇思考×AI×ビジネス\")",
+      "Bash(mkdir -p data)",
+      "Bash(mv lib/data.ts data/)",
+      "Bash(mv docs/masashi_strategy.md \"note（関連）/\")",
+      "Bash(mv docs/note_project.md \"note（関連）/\")",
+      "Bash(mv \"note（関連）/masashi_strategy.md\" \"/c/Users/mamin/OneDrive/デスクトップ/まさし（note）/\")",
+      "Bash(mv \"note（関連）/note_project.md\" \"/c/Users/mamin/OneDrive/デスクトップ/まさし（note）/\")",
+      "Bash(mv \"note（関連）/unnamed1.jpg\" \"/c/Users/mamin/OneDrive/デスクトップ/まさし（note）/\")",
+      "Bash(mv \"note（関連）/unnamed2.jpg\" \"/c/Users/mamin/OneDrive/デスクトップ/まさし（note）/\")"
     ]
   }
 }

@@ -37,3 +37,6 @@ next-env.d.ts
 
 # old workshop-app directory
 /workshop-app/
+
+# shortcuts
+*.lnk
