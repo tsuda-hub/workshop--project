@@ -14,6 +14,7 @@ import {
   type Purpose,
   type Level,
 } from "@/data/data";
+import { downloadPdf } from "@/lib/generatePdf";
 
 type TimelineItem = {
   name: string;
@@ -258,7 +259,32 @@ export default function WorkshopGenerator() {
               );
             })}
 
-            <div style={{ display: "flex", gap: 12, marginTop: 28 }}>
+            {/* PDFダウンロードボタン */}
+            <button
+              onClick={async () => {
+                const btn = document.activeElement as HTMLButtonElement;
+                if (btn) { btn.disabled = true; btn.textContent = "PDF生成中..."; }
+                try {
+                  await downloadPdf({
+                    items: buildTimelineItems(curriculum),
+                    people,
+                    purpose: purpose as Purpose,
+                    level,
+                    duration: duration!,
+                    totalDuration: curriculum.totalDuration,
+                  });
+                } finally {
+                  if (btn) { btn.disabled = false; btn.textContent = "PDFでダウンロード"; }
+                }
+              }}
+              style={{ width: "100%", padding: "16px 24px", borderRadius: 12, border: "none", background: "#264653", color: "#FFFFFF", fontSize: 16, fontWeight: 800, cursor: "pointer", transition: "all 0.3s ease", letterSpacing: 1, boxShadow: "0 4px 16px #26465344", marginTop: 28 }}
+              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 6px 20px #26465366"; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 16px #26465344"; }}
+            >
+              PDFでダウンロード
+            </button>
+
+            <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
               <button onClick={() => { setShowProgram(false); window.scrollTo(0, 0); }} style={{ flex: 1, padding: "14px 20px", borderRadius: 10, border: `2px solid ${C.accent2}`, background: "transparent", color: C.accent2, fontSize: 14, fontWeight: 700, cursor: "pointer", transition: "all 0.2s ease" }}
                 onMouseEnter={e => { e.currentTarget.style.background = `${C.accent2}08`; }} onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}>カリキュラムに戻る</button>
               <button onClick={handleReset} style={{ flex: 1, padding: "14px 20px", borderRadius: 10, border: `1px solid ${C.border}`, background: "transparent", color: C.textSub, fontSize: 14, fontWeight: 700, cursor: "pointer", transition: "all 0.2s ease" }}
