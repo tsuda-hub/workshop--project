@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell.exe -Command \"Get-ExecutionPolicy\")",
+      "WebFetch(domain:workshop-project-mocha.vercel.app)",
+      "WebSearch",
+      "WebFetch(domain:www.sessionlab.com)",
+      "WebFetch(domain:www.butter.us)",
+      "WebFetch(domain:www.howspace.com)",
+      "Bash(npm -v)",
+      "WebFetch(domain:localhost)",
+      "Bash(gh api:*)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
+    ]
+  }
+}
