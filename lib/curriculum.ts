@@ -1,7 +1,7 @@
 import { WORKSHOP_DATA, type Exercise, type Purpose, type Level } from "@/lib/data";
 
 export type Curriculum = {
-  icebreaker: Exercise | null;
+  icebreakers: Exercise[];
   main: Exercise[];
   closing: Exercise | null;
   totalDuration: number;
@@ -20,7 +20,7 @@ export function generateCurriculum({
   level: Level;
   duration: number;
 }): Curriculum {
-  const result: Curriculum = { icebreaker: null, main: [], closing: null, totalDuration: 0 };
+  const result: Curriculum = { icebreakers: [], main: [], closing: null, totalDuration: 0 };
   const userLevel = LEVEL_ORDER[level] || 1;
 
   const validIcebreakers = WORKSHOP_DATA.icebreakers.filter(
@@ -33,9 +33,12 @@ export function generateCurriculum({
     (e) => people >= e.minPeople && people <= e.maxPeople && LEVEL_ORDER[e.level] <= userLevel
   );
 
+  const icebreakerCount = duration >= 60 ? 2 : 1;
   if (validIcebreakers.length > 0) {
-    result.icebreaker = validIcebreakers[Math.floor(Math.random() * validIcebreakers.length)];
-    result.totalDuration += result.icebreaker.duration;
+    const shuffledIce = [...validIcebreakers].sort(() => Math.random() - 0.5);
+    const picked = shuffledIce.slice(0, Math.min(icebreakerCount, shuffledIce.length));
+    result.icebreakers = picked;
+    result.totalDuration += picked.reduce((sum, e) => sum + e.duration, 0);
   }
 
   if (validClosings.length > 0) {
@@ -63,7 +66,8 @@ export function generateCurriculum({
     }
   }
 
+  const icebreakerTotal = result.icebreakers.reduce((sum, e) => sum + e.duration, 0);
   result.totalDuration =
-    (result.icebreaker?.duration || 0) + timeUsed + (result.closing?.duration || 0);
+    icebreakerTotal + timeUsed + (result.closing?.duration || 0);
   return result;
 }

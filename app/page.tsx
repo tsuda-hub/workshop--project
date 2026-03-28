@@ -27,10 +27,11 @@ type TimelineItem = {
 function buildTimelineItems(curriculum: Curriculum): TimelineItem[] {
   const allItems: TimelineItem[] = [];
   let currentTime = 0;
-  if (curriculum.icebreaker) {
-    allItems.push({ ...curriculum.icebreaker, phase: "アイスブレイク", color: PHASE_COLORS["アイスブレイク"], startTime: currentTime });
-    currentTime += curriculum.icebreaker.duration;
-  }
+  curriculum.icebreakers.forEach((ice, i) => {
+    const label = curriculum.icebreakers.length > 1 ? `アイスブレイク${["①", "②"][i]}` : "アイスブレイク";
+    allItems.push({ ...ice, phase: label, color: PHASE_COLORS["アイスブレイク"], startTime: currentTime });
+    currentTime += ice.duration;
+  });
   curriculum.main.forEach((ex, i) => {
     if (i > 0) currentTime += 3;
     allItems.push({ ...ex, phase: "メインワーク", color: PHASE_COLORS["メインワーク"], startTime: currentTime });
