@@ -24,6 +24,13 @@ function hexToRgb(hex: string): [number, number, number] {
   return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
 }
 
+/** 分数を "H:MM" 形式に変換（例: 65 → "1:05"） */
+function formatTime(minutes: number): string {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return `${h}:${m.toString().padStart(2, "0")}`;
+}
+
 async function loadFont(url: string): Promise<ArrayBuffer> {
   const res = await fetch(url);
   return res.arrayBuffer();
@@ -95,9 +102,22 @@ export async function downloadPdf({ items, people, purpose, level, duration, tot
   y = 56;
 
   // --- 各エクササイズ ---
+  let prevPhase = "";
+
   for (const item of items) {
     const detail = EXERCISE_HOWTO[item.name];
     const howtoLines = detail ? detail.howto.split("\n") : [];
+
+    // 修正2: セクション間の区切り（フェーズが変わったら区切り線+余白）
+    const currentPhaseGroup = item.phase.replace(/[①②]/, "");
+    if (prevPhase && prevPhase !== currentPhaseGroup) {
+      checkPage(12);
+      doc.setDrawColor(210, 210, 206);
+      doc.setLineWidth(0.3);
+      doc.line(marginL, y, W - marginR, y);
+      y += 10;
+    }
+    prevPhase = currentPhaseGroup;
 
     // 高さを事前計算（おおよそ）
     doc.setFontSize(8);
@@ -123,15 +143,16 @@ export async function downloadPdf({ items, people, purpose, level, duration, tot
     doc.setFillColor(rgb[0], rgb[1], rgb[2]);
     doc.roundedRect(marginL, y, 3, Math.min(estimatedHeight, 280 - y), 1.5, 1.5, "F");
 
-    // フェーズラベル + 時間
-    doc.setFontSize(7);
+    // 修正1: フェーズラベル + 実時間形式の時間表示
+    doc.setFontSize(7.5);
     doc.setFont(FONT, "bold");
     doc.setTextColor(rgb[0], rgb[1], rgb[2]);
     doc.text(item.phase, marginL + 8, y + 4);
 
+    const endTime = item.startTime + item.duration;
+    const timeLabel = `${formatTime(item.startTime)}〜${formatTime(endTime)}（${item.duration}分）`;
     doc.setFont(FONT, "normal");
-    doc.setTextColor(150, 150, 150);
-    const timeLabel = `${item.startTime}分〜 / ${item.duration}分`;
+    doc.setTextColor(130, 130, 130);
     doc.text(timeLabel, marginL + 8 + doc.getTextWidth(item.phase) + 4, y + 4);
 
     // エクササイズ名
@@ -149,15 +170,15 @@ export async function downloadPdf({ items, people, purpose, level, duration, tot
 
     // やり方・手順
     if (detail) {
-      localY += 3;
-      doc.setFontSize(7.5);
+      localY += 4;
+      doc.setFontSize(8);
       doc.setFont(FONT, "bold");
       doc.setTextColor(200, 85, 61);
       doc.text("やり方・手順", marginL + 8, localY);
-      localY += 4;
+      localY += 5;
 
       doc.setFont(FONT, "normal");
-      doc.setTextColor(60, 60, 60);
+      doc.setTextColor(50, 50, 50);
       doc.setFontSize(7.5);
       for (const line of howtoLines) {
         checkPage(5);
@@ -166,21 +187,46 @@ export async function downloadPdf({ items, people, purpose, level, duration, tot
         localY += wrapped.length * 4;
       }
 
-      // ねらい
-      localY += 2;
-      doc.setFontSize(7.5);
+      // ねらい・効果
+      localY += 3;
+      doc.setFontSize(8);
       doc.setFont(FONT, "bold");
       doc.setTextColor(42, 157, 143);
       doc.text("ねらい・効果", marginL + 8, localY);
-      localY += 4;
+      localY += 5;
       doc.setFont(FONT, "normal");
       doc.setTextColor(85, 85, 85);
+      doc.setFontSize(7.5);
       const aimLines = doc.splitTextToSize(detail.aim, contentW - 14);
       doc.text(aimLines, marginL + 8, localY);
       localY += aimLines.length * 4;
     }
 
-    y = localY + 10;
+    y = localY + 12;
+  }
+
+  // --- 修正3: ファシリテーターメモ欄 ---
+  checkPage(80);
+
+  // 区切り線
+  doc.setDrawColor(210, 210, 206);
+  doc.setLineWidth(0.4);
+  doc.line(marginL, y, W - marginR, y);
+  y += 12;
+
+  // 見出し
+  doc.setFontSize(12);
+  doc.setFont(FONT, "bold");
+  doc.setTextColor(80, 80, 80);
+  doc.text("ファシリテーターメモ", marginL, y);
+  y += 10;
+
+  // 罫線6本
+  doc.setDrawColor(220, 220, 216);
+  doc.setLineWidth(0.2);
+  for (let i = 0; i < 6; i++) {
+    doc.line(marginL, y, W - marginR, y);
+    y += 12;
   }
 
   // --- フッター ---
