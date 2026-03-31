@@ -280,9 +280,10 @@ export default function WorkshopGenerator() {
 
             {/* PDFダウンロードボタン */}
             <button
-              onClick={async () => {
-                const btn = document.activeElement as HTMLButtonElement;
-                if (btn) { btn.disabled = true; btn.textContent = "PDF生成中..."; }
+              onClick={async (e) => {
+                const btn = e.currentTarget;
+                btn.disabled = true;
+                btn.textContent = "PDF生成中...";
                 try {
                   await downloadPdf({
                     items: buildTimelineItems(curriculum),
@@ -292,8 +293,12 @@ export default function WorkshopGenerator() {
                     duration: duration!,
                     totalDuration: curriculum.totalDuration,
                   });
+                } catch (err) {
+                  console.error("PDF生成エラー:", err);
+                  alert("PDFの生成に失敗しました。もう一度お試しください。");
                 } finally {
-                  if (btn) { btn.disabled = false; btn.textContent = "PDFでダウンロード"; }
+                  btn.disabled = false;
+                  btn.textContent = "PDFでダウンロード";
                 }
               }}
               className="btn btn--secondary"

@@ -194,29 +194,17 @@ export async function downloadPdf({ items, people, purpose, level, duration, tot
     doc.text(`${i} / ${pages}`, W - marginR, 290, { align: "right" });
   }
 
-  // スマホ（iOS Safari等）対応: blob URLではなくData URLを使用
-  const pdfBlob = doc.output("blob");
+  // スマホ対応: iOS SafariではBlobを直接開く、それ以外はsave()
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-  await new Promise<void>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error("PDF読み込みに失敗しました"));
-    reader.onload = () => {
-      const dataUrl = reader.result as string;
-      if (isIOS) {
-        // iOS Safari: 新しいタブでPDFを表示（共有ボタンから保存可能）
-        window.open(dataUrl, "_blank");
-      } else {
-        // PC / Android: Data URLでダウンロード
-        const a = document.createElement("a");
-        a.href = dataUrl;
-        a.download = "workshop-curriculum.pdf";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      }
-      resolve();
-    };
-    reader.readAsDataURL(pdfBlob);
-  });
+  if (isIOS) {
+    // iOS Safari: Blob URLを新タブで開く（共有ボタンから保存可能）
+    const pdfBlob = doc.output("blob");
+    const blobUrl = URL.createObjectURL(pdfBlob);
+    // iOS Safariではlocation.hrefでblob PDFを表示できる
+    window.location.href = blobUrl;
+  } else {
+    // PC / Android: jsPDF標準のsave()で確実にダウンロード
+    doc.save("workshop-curriculum.pdf");
+  }
 }
