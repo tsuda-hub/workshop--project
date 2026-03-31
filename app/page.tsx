@@ -76,6 +76,7 @@ export default function WorkshopGenerator() {
   const [curriculum, setCurriculum] = useState<Curriculum | null>(null);
   const [isGenerated, setIsGenerated] = useState(false);
   const [showProgram, setShowProgram] = useState(false);
+  const [animKey, setAnimKey] = useState(0);
 
   const canGenerate = people > 0 && purpose !== "" && level !== "" && duration !== null;
 
@@ -88,6 +89,7 @@ export default function WorkshopGenerator() {
   const handleRegenerate = () => {
     if (!canGenerate) return;
     setCurriculum(generateCurriculum({ people, purpose: purpose as Purpose, level: level as Level, duration: duration! }));
+    setAnimKey(k => k + 1);
     window.scrollTo(0, 0);
   };
   const handleReset = () => {
@@ -195,7 +197,7 @@ export default function WorkshopGenerator() {
             </button>
           </>
         ) : curriculum && !showProgram ? (
-          <div className="fade-in">
+          <div className="fade-in" key={animKey}>
             {/* タグ一覧 */}
             <div className="form-options" style={{ padding: "16px 0", borderBottom: `1px solid ${C.border}`, marginBottom: 8 }}>
               {[{ label: "人数", value: `${people}名`, color: C.accent1 }, { label: "目的", value: purpose, color: purposeColor }, { label: "レベル", value: level, color: C.accent2 }, { label: "時間", value: `${duration}分`, color: C.accent4 }].map(tag => (
