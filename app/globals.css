@@ -16,11 +16,14 @@
   --radius-lg: 14px;
   --radius-pill: 20px;
   --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 3px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 6px 20px rgba(0, 0, 0, 0.10);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.09);
+  --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.12);
   --font-sans: 'Noto Sans JP', sans-serif;
   --font-mono: 'DM Mono', monospace;
-  --transition: 0.2s ease;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-fast: 0.15s var(--ease-out);
+  --transition: 0.2s var(--ease-out);
+  --transition-slow: 0.3s var(--ease-out);
 }
 
 /* =============================================
@@ -55,8 +58,10 @@ body {
   transition: box-shadow var(--transition), transform var(--transition);
 }
 
-.card:hover {
-  box-shadow: var(--shadow-md);
+@media (hover: hover) {
+  .card:hover {
+    box-shadow: var(--shadow-md);
+  }
 }
 
 /* タイムラインカード（左ボーダー付き） */
@@ -68,9 +73,11 @@ body {
   /* border-left-color は JS から指定 */
 }
 
-.card--timeline:hover {
-  transform: translateX(3px);
-  box-shadow: var(--shadow-md);
+@media (hover: hover) {
+  .card--timeline:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow-md);
+  }
 }
 
 /* プログラム詳細カード */
@@ -78,11 +85,19 @@ body {
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+@media (hover: hover) {
+  .card--program:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
 }
 
 /* =============================================
-   ボタン共通
+   修正1: ボタン共通 — ヒエラルキーとフィードバック
    ============================================= */
 .btn {
   display: inline-flex;
@@ -93,59 +108,77 @@ body {
   cursor: pointer;
   border: none;
   border-radius: var(--radius-md);
-  transition: all 0.25s ease;
+  transition: all var(--transition);
   letter-spacing: 0.5px;
   line-height: 1;
+  min-height: 44px;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn:active {
-  transform: scale(0.98);
+  transform: scale(0.97) !important;
+  transition-duration: 0.08s;
 }
 
 .btn:disabled {
   cursor: not-allowed;
   opacity: 0.5;
+  transform: none !important;
 }
 
-/* プライマリ（生成ボタンなど） */
+/* フォーカス表示（アクセシビリティ） */
+.btn:focus-visible {
+  outline: 2px solid var(--accent1);
+  outline-offset: 2px;
+}
+
+/* ── プライマリ（カリキュラム作成 = 最重要CTA） ── */
 .btn--primary {
   width: 100%;
-  padding: 16px 24px;
-  font-size: 16px;
+  padding: 18px 28px;
+  font-size: 17px;
   font-weight: 800;
   color: #FFFFFF;
   background: var(--accent1);
-  letter-spacing: 1px;
-  box-shadow: 0 4px 16px rgba(200, 85, 61, 0.27);
+  letter-spacing: 1.5px;
+  box-shadow: 0 4px 16px rgba(200, 85, 61, 0.3);
 }
 
-.btn--primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(200, 85, 61, 0.4);
+@media (hover: hover) {
+  .btn--primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(200, 85, 61, 0.4);
+    background: #D4604A;
+  }
 }
 
 .btn--primary:disabled {
-  background: #E0E0E0;
-  color: #AAA;
+  background: #DDDDD8;
+  color: #AAAAAA;
   box-shadow: none;
 }
 
-/* セカンダリ（プログラム作成ボタンなど、色は JS から上書き） */
+/* ── セカンダリ（プログラム作成、PDFなど） ── */
 .btn--secondary {
   width: 100%;
   padding: 16px 24px;
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 15px;
+  font-weight: 700;
   color: #FFFFFF;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
-.btn--secondary:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.08);
+@media (hover: hover) {
+  .btn--secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    filter: brightness(1.08);
+  }
 }
 
-/* アウトライン（別パターンを生成 / カリキュラムに戻る） */
+/* ── アウトライン（別パターンを生成 / カリキュラムに戻る） ── */
 .btn--outline {
   flex: 1;
   padding: 14px 20px;
@@ -154,19 +187,18 @@ body {
   background: transparent;
   border: 2px solid currentColor;
   border-radius: 10px;
+  min-height: 48px;
 }
 
-.btn--outline:hover {
-  background: currentColor;
-  /* テキスト色は個別に JS で設定、背景は半透明に */
+@media (hover: hover) {
+  .btn--outline:hover {
+    background: color-mix(in srgb, currentColor 8%, transparent);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
 }
 
-/* 上書き：hover 時に背景を半透明にする */
-.btn--outline:hover {
-  background: color-mix(in srgb, currentColor 8%, transparent);
-}
-
-/* ゴースト（条件を変更する） */
+/* ── ゴースト（条件を変更する） ── */
 .btn--ghost {
   flex: 1;
   padding: 14px 20px;
@@ -176,18 +208,22 @@ body {
   border: 1px solid var(--border);
   border-radius: 10px;
   color: var(--text-sub);
+  min-height: 48px;
 }
 
-.btn--ghost:hover {
-  background: #F5F5F5;
-  border-color: #D0D0D0;
+@media (hover: hover) {
+  .btn--ghost:hover {
+    background: #F2F2F0;
+    border-color: #CDCDC8;
+    transform: translateY(-1px);
+  }
 }
 
 /* =============================================
-   選択ボタン（目的・レベル・時間）
+   修正2: 選択チップ（目的・レベル・時間）
    ============================================= */
 .select-btn {
-  padding: 10px 16px;
+  padding: 11px 18px;
   border-radius: var(--radius-sm);
   border: 1.5px solid var(--border);
   background: var(--card-bg);
@@ -198,17 +234,36 @@ body {
   cursor: pointer;
   transition: all var(--transition);
   line-height: 1.4;
+  min-height: 44px;
+  position: relative;
 }
 
-.select-btn:hover {
-  border-color: #C0C0BC;
-  background: #F8F8F6;
+.select-btn:focus-visible {
+  outline: 2px solid var(--accent2);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .select-btn:hover {
+    border-color: #B8B8B4;
+    background: #F5F5F2;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
 }
 
 .select-btn--selected {
   font-weight: 700;
   border-width: 2px;
-  /* color と border-color は JS からテーマ色を設定 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  /* color, border-color, background は JS からテーマ色を設定 */
+}
+
+@media (hover: hover) {
+  .select-btn--selected:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+  }
 }
 
 /* レベル・時間用（横均等） */
@@ -258,6 +313,14 @@ body {
   padding: 16px 20px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+@media (hover: hover) {
+  .slider-container:hover {
+    border-color: #D0D0CC;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
 }
 
 .slider-value {
@@ -267,10 +330,11 @@ body {
   font-weight: 900;
   color: var(--accent1);
   font-family: var(--font-mono);
+  transition: transform var(--transition-fast);
 }
 
 /* =============================================
-   Range Input（スライダー）
+   修正5: Range Input（スライダー）— ホバー強化
    ============================================= */
 input[type="range"] {
   -webkit-appearance: none;
@@ -295,9 +359,16 @@ input[type="range"]::-webkit-slider-thumb {
   border: 3px solid #FFFFFF;
 }
 
-input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
-  box-shadow: 0 3px 12px rgba(200, 85, 61, 0.45);
+@media (hover: hover) {
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 16px rgba(200, 85, 61, 0.5);
+  }
+}
+
+input[type="range"]:active::-webkit-slider-thumb {
+  transform: scale(1.1);
+  box-shadow: 0 2px 10px rgba(200, 85, 61, 0.55);
 }
 
 input[type="range"]::-moz-range-thumb {
@@ -308,6 +379,14 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(200, 85, 61, 0.35);
   border: 3px solid #FFFFFF;
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+@media (hover: hover) {
+  input[type="range"]::-moz-range-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 16px rgba(200, 85, 61, 0.5);
+  }
 }
 
 /* =============================================
@@ -321,6 +400,7 @@ input[type="range"]::-moz-range-thumb {
   font-weight: 600;
   font-family: var(--font-mono);
   line-height: 1.4;
+  transition: transform var(--transition-fast);
   /* color, background, border は JS からテーマ色を設定 */
 }
 
@@ -386,6 +466,13 @@ input[type="range"]::-moz-range-thumb {
   font-weight: 600;
   color: var(--accent1);
   font-family: var(--font-mono);
+  transition: background var(--transition);
+}
+
+@media (hover: hover) {
+  .header__badge:hover {
+    background: rgba(200, 85, 61, 0.1);
+  }
 }
 
 /* =============================================
@@ -421,15 +508,16 @@ input[type="range"]::-moz-range-thumb {
   font-size: 12px;
   color: var(--text-sub);
   line-height: 1.7;
+  transition: border-color var(--transition);
 }
 
 /* =============================================
-   アニメーション
+   修正3: アニメーション — スタッガードフェードイン
    ============================================= */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -438,19 +526,19 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .fade-in {
-  animation: fadeInUp 0.4s ease both;
+  animation: fadeInUp 0.35s var(--ease-out) both;
 }
 
-/* 各カードに遅延をつけるためのユーティリティ */
-.delay-1 { animation-delay: 0.05s; }
-.delay-2 { animation-delay: 0.10s; }
-.delay-3 { animation-delay: 0.15s; }
-.delay-4 { animation-delay: 0.20s; }
-.delay-5 { animation-delay: 0.25s; }
+/* スタッガード用（カード個別ディレイ） */
+.stagger-item {
+  animation: fadeInUp 0.35s var(--ease-out) both;
+}
 
 /* =============================================
-   レスポンシブ
+   修正4: レスポンシブ
    ============================================= */
+
+/* スマホ (375px〜) */
 @media (max-width: 480px) {
   .header {
     padding: 36px 16px 28px;
@@ -464,13 +552,52 @@ input[type="range"]::-moz-range-thumb {
     padding: 20px 16px 48px;
   }
 
-  .btn--primary,
+  .btn--primary {
+    padding: 16px 20px;
+    font-size: 16px;
+  }
+
   .btn--secondary {
     padding: 14px 20px;
-    font-size: 15px;
+    font-size: 14px;
+  }
+
+  .btn--outline,
+  .btn--ghost {
+    padding: 12px 14px;
+    font-size: 13px;
+    min-height: 44px;
+  }
+
+  .select-btn {
+    padding: 10px 14px;
+    font-size: 12px;
+    min-height: 44px;
+  }
+
+  .select-btn--wide {
+    font-size: 13px;
   }
 
   .slider-value {
     font-size: 28px;
+  }
+
+  .form-options {
+    gap: 6px;
+  }
+
+  .card--program {
+    margin-bottom: 16px;
+  }
+}
+
+/* =============================================
+   修正5: prefers-reduced-motion（アクセシビリティ）
+   ============================================= */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0ms !important;
+    transition-duration: 0ms !important;
   }
 }

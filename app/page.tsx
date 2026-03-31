@@ -51,16 +51,16 @@ function Timeline({ curriculum }: { curriculum: Curriculum }) {
     <div style={{ position: "relative", padding: "0 0 0 110px", marginTop: 24 }}>
       <div style={{ position: "absolute", left: 96, top: 0, bottom: 0, width: 3, background: `linear-gradient(to bottom, ${PHASE_COLORS["アイスブレイク"]}, ${PHASE_COLORS["メインワーク"]}, ${PHASE_COLORS["クロージング"]})`, borderRadius: 2 }} />
       {allItems.map((item, i) => (
-        <div key={i} className="fade-in" style={{ position: "relative", marginBottom: 18, paddingLeft: 24, animationDelay: `${i * 0.06}s` }}>
+        <div key={i} className="stagger-item" style={{ position: "relative", marginBottom: 20, paddingLeft: 24, animationDelay: `${i * 0.07}s` }}>
           <div className="mono" style={{ position: "absolute", left: -110, top: 4, width: 82, textAlign: "right", fontSize: 12, color: C.textMuted, fontWeight: 500 }}>{item.startTime}分〜</div>
           <div style={{ position: "absolute", left: -10, top: 7, width: 11, height: 11, borderRadius: "50%", background: item.color, border: `3px solid ${C.bg}`, boxShadow: `0 0 0 2px ${item.color}44` }} />
           <div className="card card--timeline" style={{ borderLeftColor: item.color }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 3 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
               <span className="mono" style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: item.color }}>{item.phase}</span>
               <span className="mono" style={{ fontSize: 11, color: C.textMuted }}>{item.duration}分</span>
             </div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: C.text, marginBottom: 4 }}>{item.name}</div>
-            <div style={{ fontSize: 13, color: C.textSub, lineHeight: 1.7 }}>{item.description}</div>
+            <div style={{ fontSize: 16, fontWeight: 800, color: C.text, marginBottom: 6 }}>{item.name}</div>
+            <div style={{ fontSize: 13, color: "#444444", lineHeight: 1.75 }}>{item.description}</div>
           </div>
         </div>
       ))}
@@ -84,6 +84,7 @@ export default function WorkshopGenerator() {
     if (!canGenerate) return;
     setCurriculum(generateCurriculum({ people, purpose: purpose as Purpose, level: level as Level, duration: duration! }));
     setIsGenerated(true);
+    setAnimKey(k => k + 1);
     window.scrollTo(0, 0);
   };
   const handleRegenerate = () => {
@@ -110,7 +111,7 @@ export default function WorkshopGenerator() {
     <div style={{ minHeight: "100vh" }}>
       {/* ヘッダー */}
       {!isGenerated && (
-        <div className="header">
+        <div className="header fade-in">
           <div className="header__brand">Theater Method Lab</div>
           <h1 className="header__title">ワークショップメーカー</h1>
           <p className="header__subtitle">あなたのワークショップを、自動でデザインします</p>
@@ -122,7 +123,7 @@ export default function WorkshopGenerator() {
         {!isGenerated ? (
           <>
             {/* 参加人数 */}
-            <div className="form-section">
+            <div className="form-section fade-in" style={{ animationDelay: "0.05s" }}>
               <label className="form-label">参加人数</label>
               <div className="slider-container">
                 <input type="range" min={2} max={35} value={people} onChange={e => setPeople(Number(e.target.value))} />
@@ -131,7 +132,7 @@ export default function WorkshopGenerator() {
             </div>
 
             {/* 目的 */}
-            <div className="form-section">
+            <div className="form-section fade-in" style={{ animationDelay: "0.1s" }}>
               <label className="form-label">目的</label>
               <div className="form-options">
                 {PURPOSES.map(p => {
@@ -152,7 +153,7 @@ export default function WorkshopGenerator() {
             </div>
 
             {/* 参加者レベル */}
-            <div className="form-section">
+            <div className="form-section fade-in" style={{ animationDelay: "0.15s" }}>
               <label className="form-label">参加者レベル</label>
               <div className="form-options">
                 {LEVELS.map(l => {
@@ -172,7 +173,7 @@ export default function WorkshopGenerator() {
             </div>
 
             {/* ワークショップ時間 */}
-            <div className="form-section" style={{ marginBottom: 36 }}>
+            <div className="form-section fade-in" style={{ animationDelay: "0.2s", marginBottom: 36 }}>
               <label className="form-label">ワークショップ時間</label>
               <div className="form-options">
                 {DURATIONS.map(d => {
@@ -192,9 +193,11 @@ export default function WorkshopGenerator() {
             </div>
 
             {/* 生成ボタン */}
-            <button onClick={handleGenerate} disabled={!canGenerate} className="btn btn--primary">
-              カリキュラム作成
-            </button>
+            <div className="fade-in" style={{ animationDelay: "0.25s" }}>
+              <button onClick={handleGenerate} disabled={!canGenerate} className="btn btn--primary">
+                カリキュラム作成
+              </button>
+            </div>
           </>
         ) : curriculum && !showProgram ? (
           <div className="fade-in" key={animKey}>
@@ -243,7 +246,7 @@ export default function WorkshopGenerator() {
             {buildTimelineItems(curriculum).map((item, i) => {
               const detail = EXERCISE_HOWTO[item.name];
               return (
-                <div key={i} className="card card--program fade-in" style={{ animationDelay: `${i * 0.06}s` }}>
+                <div key={i} className="card card--program stagger-item" style={{ animationDelay: `${i * 0.08}s` }}>
                   <div style={{ background: `${item.color}10`, borderBottom: `3px solid ${item.color}`, padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div>
                       <span className="mono" style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: item.color }}>{item.phase}</span>
@@ -255,7 +258,7 @@ export default function WorkshopGenerator() {
                     </div>
                   </div>
                   <div style={{ padding: "16px 20px" }}>
-                    <div style={{ fontSize: 13, color: C.textSub, lineHeight: 1.7, marginBottom: 14, padding: "10px 14px", background: C.bg, borderRadius: 8, borderLeft: `3px solid ${item.color}40` }}>{item.description}</div>
+                    <div style={{ fontSize: 13, color: "#444444", lineHeight: 1.75, marginBottom: 14, padding: "10px 14px", background: C.bg, borderRadius: 8, borderLeft: `3px solid ${item.color}40` }}>{item.description}</div>
                     {detail && (
                       <>
                         <div style={{ fontSize: 12, fontWeight: 700, color: C.accent1, letterSpacing: 1, marginBottom: 8 }}>やり方・手順</div>
@@ -266,7 +269,7 @@ export default function WorkshopGenerator() {
                         </div>
                         <div style={{ marginTop: 14, padding: "10px 14px", background: `${C.accent4}08`, borderRadius: 8, border: `1px solid ${C.accent4}20` }}>
                           <div style={{ fontSize: 11, fontWeight: 700, color: C.accent4, marginBottom: 4, letterSpacing: 0.5 }}>ねらい・効果</div>
-                          <div style={{ fontSize: 12, color: C.textSub, lineHeight: 1.7 }}>{detail.aim}</div>
+                          <div style={{ fontSize: 12, color: "#444444", lineHeight: 1.7 }}>{detail.aim}</div>
                         </div>
                       </>
                     )}
