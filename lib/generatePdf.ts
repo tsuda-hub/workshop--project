@@ -240,15 +240,17 @@ export async function downloadPdf({ items, people, purpose, level, duration, tot
     doc.text(`${i} / ${pages}`, W - marginR, 290, { align: "right" });
   }
 
-  // スマホ対応
-  const pdfBlob = doc.output("blob");
-  const pdfFile = new File([pdfBlob], "workshop-curriculum.pdf", { type: "application/pdf" });
+  // モバイル判定: タッチデバイスかつ画面幅が小さい場合のみWeb Share APIを使用
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-  // Web Share API対応（iOS Safari等）: ネイティブ共有シートでPDFを共有/保存
-  if (navigator.share && navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
-    await navigator.share({ files: [pdfFile] });
-  } else {
-    // PC / Android: jsPDF標準のsave()でダウンロード
-    doc.save("workshop-curriculum.pdf");
+  if (isMobile && navigator.share && navigator.canShare) {
+    const pdfBlob = doc.output("blob");
+    const pdfFile = new File([pdfBlob], "workshop-curriculum.pdf", { type: "application/pdf" });
+    if (navigator.canShare({ files: [pdfFile] })) {
+      await navigator.share({ files: [pdfFile] });
+      return;
+    }
   }
+  // PC / Android: jsPDF標準のsave()で直接ダウンロード
+  doc.save("workshop-curriculum.pdf");
 }
