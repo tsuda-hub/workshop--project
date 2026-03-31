@@ -194,5 +194,29 @@ export async function downloadPdf({ items, people, purpose, level, duration, tot
     doc.text(`${i} / ${pages}`, W - marginR, 290, { align: "right" });
   }
 
-  doc.save("workshop-program.pdf");
+  // スマホ（iOS Safari等）対応: blob URLではなくData URLを使用
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  if (isIOS) {
+    // iOS Safari: 新しいタブでPDFを表示（ユーザーが共有ボタンから保存可能）
+    const pdfBlob = doc.output("blob");
+    const reader = new FileReader();
+    reader.onload = () => {
+      window.open(reader.result as string, "_blank");
+    };
+    reader.readAsDataURL(pdfBlob);
+  } else {
+    // PC / Android: Data URLでダウンロード
+    const pdfBlob = doc.output("blob");
+    const reader = new FileReader();
+    reader.onload = () => {
+      const a = document.createElement("a");
+      a.href = reader.result as string;
+      a.download = "workshop-curriculum.pdf";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    };
+    reader.readAsDataURL(pdfBlob);
+  }
 }
