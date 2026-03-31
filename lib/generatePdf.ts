@@ -195,28 +195,28 @@ export async function downloadPdf({ items, people, purpose, level, duration, tot
   }
 
   // スマホ（iOS Safari等）対応: blob URLではなくData URLを使用
+  const pdfBlob = doc.output("blob");
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-  if (isIOS) {
-    // iOS Safari: 新しいタブでPDFを表示（ユーザーが共有ボタンから保存可能）
-    const pdfBlob = doc.output("blob");
+  await new Promise<void>((resolve, reject) => {
     const reader = new FileReader();
+    reader.onerror = () => reject(new Error("PDF読み込みに失敗しました"));
     reader.onload = () => {
-      window.open(reader.result as string, "_blank");
+      const dataUrl = reader.result as string;
+      if (isIOS) {
+        // iOS Safari: 新しいタブでPDFを表示（共有ボタンから保存可能）
+        window.open(dataUrl, "_blank");
+      } else {
+        // PC / Android: Data URLでダウンロード
+        const a = document.createElement("a");
+        a.href = dataUrl;
+        a.download = "workshop-curriculum.pdf";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+      resolve();
     };
     reader.readAsDataURL(pdfBlob);
-  } else {
-    // PC / Android: Data URLでダウンロード
-    const pdfBlob = doc.output("blob");
-    const reader = new FileReader();
-    reader.onload = () => {
-      const a = document.createElement("a");
-      a.href = reader.result as string;
-      a.download = "workshop-curriculum.pdf";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    };
-    reader.readAsDataURL(pdfBlob);
-  }
+  });
 }
