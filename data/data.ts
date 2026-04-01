@@ -8,7 +8,7 @@ export type Exercise = {
 };
 
 export type Purpose = "チームビルディング" | "コミュニケーション" | "リーダーシップ" | "プレゼンテーション" | "教員・学校運営向け" | "演劇部";
-export type Level = "初級" | "中級" | "上級";
+export type Level = "初心者" | "経験者";
 
 export const WORKSHOP_DATA: {
   icebreakers: Exercise[];
@@ -299,7 +299,7 @@ export const EXERCISE_HOWTO: Record<string, { howto: string; aim: string }> = {
 };
 
 export const PURPOSES: Purpose[] = ["チームビルディング", "コミュニケーション", "リーダーシップ", "プレゼンテーション", "教員・学校運営向け", "演劇部"];
-export const LEVELS: Level[] = ["初級", "中級", "上級"];
+export const LEVELS: Level[] = ["初心者", "経験者"];
 export const DURATIONS = [
   { label: "60分", value: 60 },
   { label: "90分", value: 90 },

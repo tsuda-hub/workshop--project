@@ -7,7 +7,16 @@ export type Curriculum = {
   totalDuration: number;
 };
 
-const LEVEL_ORDER: Record<string, number> = { "初級": 1, "中級": 2, "上級": 3 };
+function getAllowedLevels(selectedLevel: string): string[] {
+  switch (selectedLevel) {
+    case "初心者":
+      return ["初級", "中級"];
+    case "経験者":
+      return ["初級", "中級", "上級"];
+    default:
+      return ["初級", "中級", "上級"];
+  }
+}
 
 export function generateCurriculum({
   people,
@@ -21,16 +30,16 @@ export function generateCurriculum({
   duration: number;
 }): Curriculum {
   const result: Curriculum = { icebreakers: [], main: [], closing: null, totalDuration: 0 };
-  const userLevel = LEVEL_ORDER[level] || 1;
+  const allowedLevels = getAllowedLevels(level);
 
   const validIcebreakers = WORKSHOP_DATA.icebreakers.filter(
-    (e) => people >= e.minPeople && people <= e.maxPeople && LEVEL_ORDER[e.level] <= userLevel
+    (e) => people >= e.minPeople && people <= e.maxPeople && allowedLevels.includes(e.level)
   );
   const validClosings = WORKSHOP_DATA.closings.filter(
     (e) => people >= e.minPeople && people <= e.maxPeople
   );
   const purposeExercises = (WORKSHOP_DATA.mainExercises[purpose] || []).filter(
-    (e) => people >= e.minPeople && people <= e.maxPeople && LEVEL_ORDER[e.level] <= userLevel
+    (e) => people >= e.minPeople && people <= e.maxPeople && allowedLevels.includes(e.level)
   );
 
   const icebreakerCount = duration >= 60 ? 2 : 1;
