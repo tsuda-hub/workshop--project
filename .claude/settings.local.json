@@ -36,7 +36,28 @@
       "Bash(mv \"note（関連）/masashi_strategy.md\" \"/c/Users/mamin/OneDrive/デスクトップ/まさし（note）/\")",
       "Bash(mv \"note（関連）/note_project.md\" \"/c/Users/mamin/OneDrive/デスクトップ/まさし（note）/\")",
       "Bash(mv \"note（関連）/unnamed1.jpg\" \"/c/Users/mamin/OneDrive/デスクトップ/まさし（note）/\")",
-      "Bash(mv \"note（関連）/unnamed2.jpg\" \"/c/Users/mamin/OneDrive/デスクトップ/まさし（note）/\")"
+      "Bash(mv \"note（関連）/unnamed2.jpg\" \"/c/Users/mamin/OneDrive/デスクトップ/まさし（note）/\")",
+      "Bash(npm install:*)",
+      "Bash(curl -L -o \"C:/Users/mamin/OneDrive/デスクトップ/まさし/public/fonts/NotoSansJP-Regular.ttf\" \"https://github.com/google/fonts/raw/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf\")",
+      "Bash(curl -L -o \"C:/Users/mamin/OneDrive/デスクトップ/まさし/public/fonts/NotoSansJP-Regular.ttf\" \"https://github.com/google/fonts/raw/main/ofl/notosansjp/NotoSansJP-Regular.ttf\")",
+      "Bash(curl -L -o \"C:/Users/mamin/OneDrive/デスクトップ/まさし/public/fonts/NotoSansJP-Regular.ttf\" \"https://github.com/googlefonts/noto-cjk/raw/main/Sans/OTF/Japanese/NotoSansCJKjp-Regular.otf\")",
+      "Bash(curl -L -o \"C:/Users/mamin/OneDrive/デスクトップ/まさし/public/fonts/NotoSansJP-Regular.ttf\" \"https://github.com/googlefonts/noto-cjk/raw/main/Sans/TTF/Japanese/NotoSansCJKjp-Regular.ttf\")",
+      "Bash(curl -L -o /tmp/NotoSansCJKjp.zip \"https://github.com/googlefonts/noto-cjk/releases/download/Sans2.004/08_NotoSansCJKjp.zip\")",
+      "Bash(find C:/Users/mamin/OneDrive/デスクトップ/まさし/node_modules/@fontsource/noto-sans-jp -name *.ttf -o -name *.woff2 -o -name *.woff)",
+      "Bash(curl:*)",
+      "Bash(cd /tmp)",
+      "Bash(unzip -o NotoSansJP.zip -d NotoSansJP)",
+      "Bash(netstat -ano)",
+      "mcp__claude_ai_Vercel__list_teams",
+      "mcp__claude_ai_Vercel__list_projects",
+      "mcp__claude_ai_Vercel__list_deployments",
+      "Bash(gh pr:*)",
+      "WebFetch(domain:workshop-project-mocha-git-ui-css-refactor-tsuda-hubs-projects.vercel.app)",
+      "WebFetch(domain:workshop-project-mocha-ui-css-refactor.vercel.app)",
+      "Read(//c/Users/mamin/OneDrive/デスクトップ/まさし/$HOME/.agents/**)",
+      "Read(//c/Users/mamin/OneDrive/デスクトップ/まさし/$HOME/.claude/**)",
+      "Bash(gh repo *)",
+      "WebFetch(domain:github.com)"
     ]
   }
 }
